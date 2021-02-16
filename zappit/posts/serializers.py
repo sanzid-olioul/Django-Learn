@@ -4,9 +4,13 @@ from .models import Post, Vote
 class PostSerializer(serializers.ModelSerializer):
     poster = serializers.ReadOnlyField(source = 'poster = serializers.ReadOnlyField(source = .username')
     poster = serializers.ReadOnlyField(source = 'poster.id')
+    votes = serializers.SerializerMethodField()
     class Meta:
         model = Post
         fields = ['id','title','url','poster','poster_id','created']
+
+    def get_votes(self,post):
+        return Vote.objects.filter(post=post).count()
 
 class VoteSerializer(serializers.ModelSerializer):
     class Meta:
