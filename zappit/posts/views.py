@@ -13,6 +13,20 @@ class PostList(generics.ListCreateAPIView):
     def perform_create(self,serializer):
         serializer.save(poster=self.request.user)
 
+class PostRetrieveDestroy(generics.RetrieveDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def delete(self,request,*args,**kwargs):
+        post = Post.objects.filter(pk=kwargs['pk'],poster=self.request.user)
+        if post.exists():
+            return self.destroy(request,*args,**kwargs)
+
+
+
+
+
 class VoteCreate(generics.CreateAPIView,mixins.DestroyModelMixin):
     serializer_class = VoteSerializer 
     permission_classes = [permissions.IsAuthenticated]
@@ -27,7 +41,7 @@ class VoteCreate(generics.CreateAPIView,mixins.DestroyModelMixin):
             raise ValidationError('You have already voted fot the post')
         serializer.save(voter=self.request.user,post= Post.objects.get(pk=self.kwargs['pk']))
 
-    def delete(self,request,*args,**keargs):
+    def delete(self,request,*args,**kwargs):
         if self.get_queryset().exists():
             self.get_queryset().delete()
             return Response(status = status.HTTP_204_NO_CONTENT)
