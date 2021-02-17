@@ -23,7 +23,8 @@ class PostRetrieveDestroy(generics.RetrieveDestroyAPIView):
         if post.exists():
             return self.destroy(request,*args,**kwargs)
 
-
+        else:
+            raise ValidationError('No such posts.')
 
 
 
