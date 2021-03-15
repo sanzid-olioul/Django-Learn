@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.db import router
 from django.urls import path,include
-from .views import FlightViewSet,PassengerViewSet,ReservationViewSet,find_flights
+from .views import FlightViewSet,PassengerViewSet,ReservationViewSet,find_flights,save_reservation
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register('flights',FlightViewSet)
@@ -25,5 +25,6 @@ router.register('reservation',ReservationViewSet)
 
 urlpatterns = [
     path('',include(router.urls)),
-    path('find/',find_flights)
+    path('find/',find_flights),
+    path('reserve/',save_reservation)
 ]
